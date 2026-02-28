@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+/* ─── Keyframes ─── */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+/* ─── RetroGrid animation ─── */
+@keyframes grid {
+  0% {
+    transform: translateY(-50%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-grid {
+  animation: grid 15s linear infinite;
+}
+
+/* ─── Root variables ─── */
+:root {
+  --primary: #2563EB;
+  --primary-light: #3b82f6;
+  --danger: #ef4444;
+  --success: #10b981;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: max(884px, 100dvh);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Public Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100dvh;
+  min-height: max(884px, 100dvh);
+}
+
+/* ─── Glass panel utility ─── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Scrollbar (subtle) ─── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+/* ─── Hide scrollbar helper ─── */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Map tile brightness ─── */
+.leaflet-tile-pane {
+  filter: grayscale(30%) brightness(1.1) contrast(0.95) !important;
+}
+
+/* ─── Material Symbols fill helper ─── */
+.material-symbols-filled {
+  font-variation-settings: 'FILL' 1;
+}
+
+/* ─── AnimeNavBar shimmer ─── */
+.glow-blue {
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.35);
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="SafePath AI — Calculate the safest evacuation routes in real-time during disasters. Avoids flood zones, hazards, and low-elevation roads." />
+  <title>SafePath AI — Disaster Evacuation</title>
+
+  <!-- Google Fonts: Public Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN with custom config -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#ff6b00',
+            secondary: '#00e676',
+            'background-dark': '#050505',
+            'surface-dark': '#121212',
+            'surface-card': '#1e1e1e',
+          },
+          fontFamily: {
+            display: ['Public Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-[#050505] text-white">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
