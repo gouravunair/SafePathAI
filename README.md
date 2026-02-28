@@ -1,56 +1,62 @@
-# SafePath AI - Disaster Evacuation System (Wayanad Edition)
+# 🗺️ SafePath AI - Kerala Relief (Wayanad Edition)
 
-A full-stack AI-driven application for calculating the safest evacuation routes during disasters, specifically configured for **Wayanad, Kerala, India**. It integrates real-time hazard data, elevation risks, and automated weather monitoring.
+**SafePath AI** is a tool built to find the safest evacuation routes during disasters in **Wayanad, Kerala, India**. It calculates the safest path by looking at live rain data, flood zones, and landslide risks.
 
-## 📍 Project Focus: Wayanad, Kerala
-The application has been fully pivoted to support the Wayanad region, including:
-- **Default Map Center**: Wayanad coordinates (11.6854, 76.1320).
-- **Road Network**: Pre-generated road networks for routing in Mananthavady and surrounding areas.
-- **Shelter Data**: Integrated locations for regional evacuation shelters.
+---
 
-## ✨ Key Features
-- **Intelligent Routing**: Dijkstra-based routing weighted by real-time rainfall, elevation, and reported hazards.
-- **Vibrant Modern UI**: A high-fidelity "V3" design featuring glassmorphism, vertical navigation, and pulsing map indicators.
-- **Automated Weather Sync**: Live syncing with OpenWeatherMap to dynamically adjust road safety weights based on rainfall intensity.
-- **Real-time Hazards**: Instant synchronization with Supabase for user-reported landslides, floods, and roadblocks.
+## 🚀 How to Run (Easy Step-by-Step)
 
-## 🚀 Setup & Scripts
+If you have never used GitHub before, follow these steps to see the website on your computer:
 
-### 1. Road Data Generation
-Generate the regional road network with pgRouting IDs:
-```bash
-python upload_wayanad.py
-```
-This produces `wayanad_roads_with_id.csv`, ready for Supabase upload.
+### 1. Download the Project
+1. Scroll to the top of this page.
+2. Click the green **"<> Code"** button.
+3. Click **"Download ZIP"**.
+4. Extract (Unzip) the folder on your computer (e.g., to your Desktop).
 
-### 2. Weather & Hazard Sync
-Update road hazard weights based on live rainfall:
-```bash
-python weather_update.py
-```
+### 2. Set Up Your Keys
+1. Open the extracted folder.
+2. Go into the `frontend` folder.
+3. Find the file named `.env.example`.
+4. **Rename** it to exactly `.env`.
+5. Open it with Notepad and paste your **Supabase URL** and **Anon Key** where requested.
 
-### 3. Local Development
-**Backend (FastAPI):**
-```bash
-cd backend
-python -m venv .venv
-.\.venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+### 3. Start the Website (Frontend)
+1. Open your Windows **PowerShell** or Command Prompt.
+2. Go to the `frontend` folder:
+   ```powershell
+   cd frontend
+   ```
+3. Install the tools (only once):
+   ```powershell
+   npm install
+   ```
+4. Start the website:
+   ```powershell
+   npm run dev
+   ```
+5. **Open your browser** and go to: `http://localhost:5173`
 
-**Frontend (React/Vite):**
-```bash
-cd frontend
-npm install
-npm run dev
-```
+---
 
-## 🔗 Repositories
-- **Primary**: [SafePathAI](https://github.com/gouravunair/SafePathAI.git)
-- **Secondary**: [SafePathAI2](https://github.com/gouravunair/SafePathAI2.git)
+## 🧪 For Developers & Advanced Users
 
-## 🛠 Tech Stack
-- **Frontend**: React, Vite, Leaflet, Framer Motion, Lucide Icons.
-- **Backend**: FastAPI, OSMnx, NetworkX.
-- **Database**: Supabase (Postgres + PostGIS + pgRouting).
+### Regional Settings
+- **Location**: Wayanad (11.6854, 76.1320)
+- **UI Design**: Modern "V3" glassmorphism with pulsing hazard indicators.
+
+### Running Helper Scripts
+These scripts help synchronize live data:
+1. **Prepare Road Data**: `python upload_wayanad.py` (Generates `wayanad_roads_with_id.csv`).
+2. **Update Live Weather**: `python weather_update.py` (Syncs rain data to the map).
+
+### Technical Stack
+- **Frontend**: React (Vite), Leaflet (Maps), Framer Motion (Animations).
+- **Backend**: FastAPI, OSMnx (Road Networks), NetworkX.
+- **Database**: Supabase (PostGIS for spatial data).
+
+---
+
+## 🔗 Repository Links
+- **Primary**: [SafePathAI](https://github.com/gouravunair/SafePathAI.git) 📍
+- **Secondary**: [SafePathAI2](https://github.com/gouravunair/SafePathAI2.git) 📍
