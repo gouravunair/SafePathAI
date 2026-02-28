@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+osmnx
+networkx
+geopandas
+pandas
+supabase
+requests
+sqlalchemy
+psycopg2-binary
