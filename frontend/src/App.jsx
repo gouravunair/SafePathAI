@@ -13,8 +13,8 @@ import { AnimeNavBar } from './components/ui/anime-navbar'
 import { supabase } from './lib/supabase'
 
 const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-const DEMO_START = { lat: 37.7749, lng: -122.4194 }
-const DEMO_END = { lat: 37.7649, lng: -122.4094 }
+const DEMO_START = { lat: 11.6854, lng: 76.1320 } // Wayanad, Kerala
+const DEMO_END = { lat: 11.7516, lng: 76.0829 } // Mananthavady/Shelter Area
 
 // AnimeNavBar items — names match exactly what setActiveTab expects
 const NAV_ITEMS = [
@@ -43,19 +43,58 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [showFilters, setShowFilters] = useState({ shelters: true, hazards: true, medical: false })
 
-  const fetchRoutes = useCallback(async () => {
+  // ── Helper: GeoJSON LineString → Leaflet [lat, lng] pairs ──
+  const geoJsonToLatLng = (geojsonStr) => {
+    try {
+      const g = typeof geojsonStr === 'string' ? JSON.parse(geojsonStr) : geojsonStr
+      const coords = g?.coordinates ?? g?.geometry?.coordinates ?? []
+      return coords.map(([lng, lat]) => [lat, lng])
+    } catch { return [] }
+  }
+
+  const fetchRoutes = useCallback(async (startCoords = DEMO_START, endCoords = DEMO_END) => {
     setLoading(true)
     try {
+      // ── Primary: Supabase brain RPC ──
+      if (supabase) {
+        const { data, error } = await supabase.rpc('get_safe_evacuation_route', {
+          start_lng: startCoords.lng,
+          start_lat: startCoords.lat,
+          end_lng: endCoords.lng,
+          end_lat: endCoords.lat,
+        })
+        if (!error && data) {
+          if (data.safest || data.fastest) {
+            setRouteData({
+              safest: { route: geoJsonToLatLng(data.safest), distance_m: data.safest_distance_m ?? 5200, time_est_min: data.safest_time_min ?? 18 },
+              fastest: { route: geoJsonToLatLng(data.fastest), distance_m: data.fastest_distance_m ?? 4100, time_est_min: data.fastest_time_min ?? 12 },
+            })
+          } else {
+            const route = geoJsonToLatLng(data)
+            setRouteData({
+              safest: { route, distance_m: 5200, time_est_min: 18 },
+              fastest: { route, distance_m: 4100, time_est_min: 12 },
+            })
+          }
+          setLoading(false); return
+        }
+        if (error) console.warn('Supabase RPC error, trying backend:', error.message)
+      }
+
+      // ── Fallback: Python backend ──
       const res = await axios.post(API + '/calculate-route', {
-        start_lat: DEMO_START.lat, start_lng: DEMO_START.lng,
-        end_lat: DEMO_END.lat, end_lng: DEMO_END.lng, disaster_type: 'flood'
+        start_lat: startCoords.lat, start_lng: startCoords.lng,
+        end_lat: endCoords.lat, end_lng: endCoords.lng,
+        disaster_type: 'flood'
       })
       setRouteData(res.data)
       if (res.data.weather_hazards?.length) setWeatherAlerts(res.data.weather_hazards)
-    } catch {
+
+    } catch (err) {
+      console.warn('Route fetch failed, using demo data:', err)
       setRouteData({
-        safest: { route: [[37.7749, -122.4194], [37.7769, -122.4174], [37.7789, -122.4154], [37.7809, -122.4134], [37.7649, -122.4094]], distance_m: 5200, time_est_min: 18 },
-        fastest: { route: [[37.7749, -122.4194], [37.7719, -122.4164], [37.7689, -122.4134], [37.7649, -122.4094]], distance_m: 4100, time_est_min: 12 }
+        safest: { route: [[11.6854, 76.1320], [11.6950, 76.1250], [11.7100, 76.1150], [11.7300, 76.1000], [11.7516, 76.0829]], distance_m: 5200, time_est_min: 18 },
+        fastest: { route: [[11.6854, 76.1320], [11.7000, 76.1100], [11.7250, 76.0950], [11.7516, 76.0829]], distance_m: 4100, time_est_min: 12 },
       })
     } finally { setLoading(false) }
   }, [])
@@ -69,6 +108,12 @@ export default function App() {
   }, [])
 
   const fetchShelters = useCallback(async () => {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('evacuation_shelters').select('*').limit(10)
+        if (!error && data?.length) { setShelters(data); return }
+      } catch { }
+    }
     try {
       const { data } = await axios.get(API + '/nearest-shelters', { params: { lat: DEMO_START.lat, lng: DEMO_START.lng, limit: 5 } })
       setShelters(data.shelters || [])

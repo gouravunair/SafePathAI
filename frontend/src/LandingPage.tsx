@@ -75,17 +75,17 @@ export default function LandingPage({ onNavigate }) {
                 className="relative z-20 flex flex-col items-center gap-1.5 pb-5"
             >
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Current Location</p>
-                <LocationMap location="San Francisco, CA" coordinates="37.7749° N, 122.4194° W" />
+                <LocationMap location="Wayanad, Kerala, India" coordinates="11.6854° N, 76.1320° E" />
             </motion.div>
 
             {/* ── Search bar (compact) ── */}
             <motion.div
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
-                className="relative z-20 px-5 pb-3"
+                className="relative z-20 px-5 pb-2"
             >
-                <form onSubmit={e => { e.preventDefault(); handleSearch(searchQuery) }} className="max-w-sm mx-auto">
+                <form onSubmit={e => { e.preventDefault(); handleSearch(searchQuery) }} className="max-w-[320px] mx-auto">
                     <label
-                        className="flex w-full h-10 rounded-full items-center cursor-text transition-all"
+                        className="flex w-full h-9 rounded-full items-center cursor-text transition-all"
                         style={{
                             background: 'rgba(255,255,255,0.9)',
                             backdropFilter: 'blur(16px)',
@@ -94,29 +94,20 @@ export default function LandingPage({ onNavigate }) {
                         }}
                     >
                         <div className="pl-3 pr-1.5 shrink-0">
-                            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: isFocused ? '#2563EB' : '#94a3b8' }}>search</span>
+                            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: isFocused ? '#2563EB' : '#94a3b8' }}>search</span>
                         </div>
                         <input
                             id="destination-search"
-                            type="text"
+                            className="w-full bg-transparent border-none text-slate-800 placeholder-slate-400 focus:ring-0 focus:outline-none h-full text-[11px] font-medium"
+                            placeholder="Search destination..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
                             onFocus={() => setIsFocused(true)}
-                            onBlur={() => setTimeout(() => setIsFocused(false), 150)}
-                            placeholder="Search destination or shelter…"
-                            className="flex-1 bg-transparent py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none"
+                            onBlur={() => setIsFocused(false)}
                         />
-                        {searchQuery && (
-                            <button type="button" onClick={() => setSearchQuery('')} className="px-1.5 text-slate-300 hover:text-slate-500">
-                                <X size={13} />
-                            </button>
-                        )}
                         <button
                             id="btn-search-destination"
-                            type="submit"
-                            disabled={!searchQuery.trim() || loading}
-                            className="m-1 px-3.5 py-1.5 rounded-full font-bold text-xs text-white flex items-center gap-1 transition-all active:scale-95 disabled:opacity-40"
-                            style={{ background: '#2563EB', boxShadow: '0 2px 8px rgba(37,99,235,0.35)' }}
+                            className="h-7 px-3 mr-1 rounded-full bg-blue-600 text-white text-[11px] font-bold hover:bg-blue-700 transition-colors shadow-sm"
                         >
                             {loading ? <span className="animate-spin text-sm">⟳</span> : 'Route'}
                         </button>

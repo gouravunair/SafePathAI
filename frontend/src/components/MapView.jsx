@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css'
 
 const SAFE_BLUE = '#2563EB'
 const FAST_ORANGE = '#f97316'
-const SF_CENTER = [37.7749, -122.4194]
+const WAYANAD_CENTER = [11.6854, 76.1320]
 
 export default function MapView({ routeData, hazards, activeRoute, shelters }) {
     const mapRef = useRef(null)
@@ -25,7 +25,7 @@ export default function MapView({ routeData, hazards, activeRoute, shelters }) {
         // Attribution corner
         L.control.attribution({ prefix: false, position: 'bottomright' }).addTo(map)
 
-        map.setView(SF_CENTER, 14)
+        map.setView(WAYANAD_CENTER, 14)
         layersRef.current.hazards = L.layerGroup().addTo(map)
         layersRef.current.shelters = L.layerGroup().addTo(map)
         layersRef.current.routes = L.layerGroup().addTo(map)
@@ -36,7 +36,7 @@ export default function MapView({ routeData, hazards, activeRoute, shelters }) {
                <div style="position:absolute;inset:0;background:${SAFE_BLUE};border-radius:50%;animation:ping 1.5s ease-out infinite;opacity:0.35"></div></div>`,
             className: '', iconSize: [18, 18], iconAnchor: [9, 9]
         })
-        L.marker(SF_CENTER, { icon: locIcon }).addTo(map)
+        L.marker(WAYANAD_CENTER, { icon: locIcon }).addTo(map)
     }, [])
 
     // Routes

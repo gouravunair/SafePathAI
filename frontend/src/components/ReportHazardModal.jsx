@@ -105,7 +105,7 @@ export default function ReportHazardModal({ isOpen, onClose, onSubmit, userCoord
 
                                 {/* Coords */}
                                 <div className="grid grid-cols-2 gap-3">
-                                    {[{ label: 'Latitude', key: 'lat', placeholder: '37.7749' }, { label: 'Longitude', key: 'lng', placeholder: '-122.4194' }].map(f => (
+                                    {[{ label: 'Latitude', key: 'lat', placeholder: '11.6854' }, { label: 'Longitude', key: 'lng', placeholder: '76.1320' }].map(f => (
                                         <div key={f.key}>
                                             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">{f.label}</label>
                                             <input type="number" step="any" value={form[f.key]} placeholder={f.placeholder}

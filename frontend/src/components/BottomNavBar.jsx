@@ -79,29 +79,29 @@ export default function BottomNavBar({ activeTab, setActiveTab, hazards, weather
                 }}>
 
                 {/* Alert cards horizontal scroll */}
-                <div className="flex gap-3 px-4 py-3 overflow-x-auto hide-scrollbar">
+                <div className="flex gap-3 px-4 py-2 overflow-x-auto hide-scrollbar">
                     {alertCards.map((card, i) => (
                         <AlertCard key={i} {...card} />
                     ))}
                 </div>
 
                 {/* Tab bar */}
-                <div className="flex px-4 pb-6 pt-1 justify-around items-end">
+                <div className="flex px-4 pb-4 pt-1 justify-around items-end">
                     {TABS.map(tab => {
                         const isActive = activeTab === tab.key
                         return (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className="flex flex-1 flex-col items-center gap-1 group active:scale-90 transition-transform"
+                                className="flex flex-1 flex-col items-center gap-0.5 group active:scale-90 transition-transform"
                             >
-                                <div className={`flex h-8 items-center justify-center transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
-                                    <span className={`material-symbols-outlined text-2xl ${isActive ? 'material-symbols-filled' : ''}`}
+                                <div className={`flex h-7 items-center justify-center transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                                    <span className={`material-symbols-outlined text-xl ${isActive ? 'material-symbols-filled' : ''}`}
                                         style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}>
                                         {tab.icon}
                                     </span>
                                 </div>
-                                <p className={`text-[11px] font-bold tracking-wide transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                                <p className={`text-[10px] font-bold tracking-wide transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
                                     {tab.label}
                                 </p>
                             </button>

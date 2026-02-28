@@ -11,8 +11,8 @@ interface LocationMapProps {
 }
 
 export function LocationMap({
-    location = "San Francisco, CA",
-    coordinates = "37.7749° N, 122.4194° W",
+    location = "Wayanad, Kerala, India",
+    coordinates = "11.6854° N, 76.1320° E",
     className,
 }: LocationMapProps) {
     const [isHovered, setIsHovered] = useState(false)
