@@ -137,21 +137,54 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- ============================================================
--- 8. SAMPLE SEED DATA (for development)
+-- 8. SAMPLE SEED DATA (for development - Wayanad, Kerala)
 -- ============================================================
 INSERT INTO shelters (name, address, capacity, status, geom, amenities) VALUES
-('Highland Community Center', '450 Highland Ave', 500, 'open',
-    ST_SetSRID(ST_MakePoint(-122.4094, 37.7849), 4326),
+('Mananthavady Relief Camp', 'Main Road, Mananthavady', 450, 'open',
+    ST_SetSRID(ST_MakePoint(76.0829, 11.7516), 4326),
     ARRAY['food','water','medical','wifi']),
-('Civic Arena Emergency Shelter', '1 Civic Center Plaza', 1200, 'open',
-    ST_SetSRID(ST_MakePoint(-122.4194, 37.7649), 4326),
+('Kalpetta Central Shelter', 'Kalpetta Town Hall', 800, 'open',
+    ST_SetSRID(ST_MakePoint(76.1320, 11.6050), 4326),
     ARRAY['food','water','medical']),
-('Eastside High School', '2200 East 14th St', 800, 'open',
-    ST_SetSRID(ST_MakePoint(-122.3994, 37.7749), 4326),
+('Sulthan Bathery High School', 'Civil Station Road', 600, 'open',
+    ST_SetSRID(ST_MakePoint(76.2620, 11.6620), 4326),
     ARRAY['food','water'])
 ON CONFLICT DO NOTHING;
 
 INSERT INTO reported_hazards (type, severity, description, geom, radius_meters, source) VALUES
-('flood', 8, 'River Road flooding — 1m water level', ST_SetSRID(ST_MakePoint(-122.4144, 37.7699), 4326), 400, 'openweather'),
-('structural', 9, 'East River Bridge — structural damage, CLOSED', ST_SetSRID(ST_MakePoint(-122.4244, 37.7750), 4326), 100, 'user')
+('landslide', 9, 'Critical: Landslide block on Vythiri road', ST_SetSRID(ST_MakePoint(76.0400, 11.5500), 4326), 500, 'user'),
+('flood', 7, 'River overflow near Panamaram bridge', ST_SetSRID(ST_MakePoint(76.1000, 11.7200), 4326), 300, 'openweather')
 ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- 9. POINTS OF INTEREST TABLE (Shops, Schools, etc.)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS points_of_interest (
+    id              BIGSERIAL PRIMARY KEY,
+    name            TEXT NOT NULL,
+    type            TEXT,                           -- 'school', 'shop', etc.
+    lat             FLOAT8 NOT NULL,
+    lng             FLOAT8 NOT NULL,
+    geom            GEOMETRY(Point, 4326),
+    district        TEXT DEFAULT 'Wayanad',
+    created_at      TIMESTAMPTZ DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_pois_geom ON points_of_interest USING GIST (geom);
+
+-- Trigger to update geom from lat/lng
+CREATE OR REPLACE FUNCTION update_poi_geom()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.geom := ST_SetSRID(ST_MakePoint(NEW.lng, NEW.lat), 4326);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER poi_geom_trigger
+BEFORE INSERT OR UPDATE ON points_of_interest
+FOR EACH ROW EXECUTE FUNCTION update_poi_geom();
+
+ALTER TABLE points_of_interest ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read POIs" ON points_of_interest FOR SELECT USING (true);

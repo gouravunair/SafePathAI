@@ -6,7 +6,7 @@ const SAFE_BLUE = '#2563EB'
 const FAST_ORANGE = '#f97316'
 const WAYANAD_CENTER = [11.6854, 76.1320]
 
-export default function MapView({ routeData, hazards, activeRoute, shelters }) {
+export default function MapView({ routeData, hazards, activeRoute, shelters, pois }) {
     const mapRef = useRef(null)
     const mapInst = useRef(null)
     const layersRef = useRef({})
@@ -28,7 +28,10 @@ export default function MapView({ routeData, hazards, activeRoute, shelters }) {
         map.setView(WAYANAD_CENTER, 14)
         layersRef.current.hazards = L.layerGroup().addTo(map)
         layersRef.current.shelters = L.layerGroup().addTo(map)
+        layersRef.current.pois = L.layerGroup().addTo(map)
         layersRef.current.routes = L.layerGroup().addTo(map)
+
+        // ... (rest of first useEffect remain the same)
 
         // Pulsing user location dot
         const locIcon = L.divIcon({
@@ -93,6 +96,21 @@ export default function MapView({ routeData, hazards, activeRoute, shelters }) {
             L.marker([geom[1] || s.lat, geom[0] || s.lng], { icon }).addTo(layersRef.current.shelters)
         })
     }, [shelters])
+
+    // POIs (Schools & Shops)
+    useEffect(() => {
+        if (!mapInst.current || !pois) return
+        layersRef.current.pois.clearLayers()
+        pois.forEach(p => {
+            const icon = L.divIcon({
+                html: `<div style="background:white;border:1px solid #cbd5e1;border-radius:24px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);font-size:12px">
+                        ${p.type === 'school' ? '🏫' : '🛍️'}
+                       </div>`,
+                className: '', iconSize: [24, 24], iconAnchor: [12, 12]
+            })
+            L.marker([p.lat, p.lng], { icon }).addTo(layersRef.current.pois)
+        })
+    }, [pois])
 
     return (
         <div
